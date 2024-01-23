@@ -1,0 +1,61 @@
+basePath: /api
+definitions:
+  models.Tags:
+    properties:
+      name:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Game tracker app API
+  title: Game tracker API
+paths:
+  /tags:
+    get:
+      operationId: get-all-tags
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Tags'
+      summary: Get all tags
+    post:
+      consumes:
+      - application/json
+      operationId: create-tag
+      parameters:
+      - description: Tag
+        in: body
+        name: tag
+        required: true
+        schema:
+          $ref: '#/definitions/models.Tags'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Tags'
+      summary: Create a tag
+  /tags/{id}:
+    delete:
+      operationId: delete-tag
+      parameters:
+      - description: Tag ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Tags'
+      summary: Delete a tag
+swagger: "2.0"
