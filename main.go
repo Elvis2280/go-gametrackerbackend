@@ -38,6 +38,7 @@ func main() {
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	routes.SetupTagsRoutes(r)
 	routes.SetupPlatformsRoutes(r)
+	routes.SetupGamesRoutes(r)
 
 	r.Run()
 }

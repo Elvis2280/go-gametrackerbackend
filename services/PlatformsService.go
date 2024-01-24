@@ -3,6 +3,7 @@ package services
 import (
 	"gametracker/db"
 	"gametracker/models"
+	"gametracker/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -43,7 +44,11 @@ func CreatePlatform(c *gin.Context) {
 	database := db.GetDatabase()
 	var platform models.Platforms
 
-	c.BindJSON(&platform)
+	parsing := utils.CheckParse(c, &platform)
+	if parsing == nil {
+		return
+	}
+	
 	checkPlatformExists := database.Where("name = ?", platform.Name).First(&platform)
 	if checkPlatformExists.RowsAffected > 0 {
 		c.JSON(400, gin.H{

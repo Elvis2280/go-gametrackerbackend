@@ -1,5 +1,22 @@
 basePath: /api
 definitions:
+  models.Game:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      platforms:
+        items:
+          $ref: '#/definitions/models.Platforms'
+        type: array
+      status:
+        type: string
+      tags:
+        items:
+          $ref: '#/definitions/models.Tags'
+        type: array
+    type: object
   models.Platforms:
     properties:
       iconName:
@@ -18,6 +35,85 @@ info:
   description: Game tracker app API
   title: Game tracker API
 paths:
+  /games:
+    delete:
+      consumes:
+      - application/json
+      operationId: delete-game
+      parameters:
+      - description: Tag
+        in: body
+        name: platform
+        required: true
+        schema:
+          $ref: '#/definitions/models.Game'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Game'
+      summary: Delete a game
+      tags:
+      - games
+    get:
+      operationId: get-all-games
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Game'
+            type: array
+      summary: Get all Games
+      tags:
+      - games
+    post:
+      consumes:
+      - application/json
+      operationId: create-game
+      parameters:
+      - description: Tag
+        in: body
+        name: platform
+        required: true
+        schema:
+          $ref: '#/definitions/models.Game'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Game'
+      summary: Create a game
+      tags:
+      - games
+  /games/{id}:
+    put:
+      consumes:
+      - application/json
+      operationId: update-game
+      parameters:
+      - description: Tag
+        in: body
+        name: platform
+        required: true
+        schema:
+          $ref: '#/definitions/models.Game'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Game'
+      summary: Update a game
+      tags:
+      - games
   /platforms:
     get:
       operationId: get-all-platforms

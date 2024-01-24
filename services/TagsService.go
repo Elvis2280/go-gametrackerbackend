@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"gametracker/db"
 	models "gametracker/models"
+	"gametracker/utils"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -50,7 +51,11 @@ func CreateTag(c *gin.Context) {
 	database := db.GetDatabase()
 	var tag models.Tags
 
-	c.BindJSON(&tag)
+	parsing := utils.CheckParse(c, &tag)
+	if parsing == nil {
+		return
+	}
+
 	checkTagExists := database.Where("name = ?", tag.Name).First(&tag)
 	if checkTagExists.RowsAffected > 0 { // tag already exists
 		c.JSON(http.StatusBadRequest, gin.H{
