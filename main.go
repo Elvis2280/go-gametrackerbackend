@@ -39,6 +39,7 @@ func main() {
 	routes.SetupTagsRoutes(r)
 	routes.SetupPlatformsRoutes(r)
 	routes.SetupGamesRoutes(r)
+	routes.SetupUsersRoutes(r)
 
 	r.Run()
 }

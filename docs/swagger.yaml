@@ -16,6 +16,8 @@ definitions:
         items:
           $ref: '#/definitions/models.Tags'
         type: array
+      user_id:
+        type: integer
     type: object
   models.Platforms:
     properties:
@@ -27,6 +29,37 @@ definitions:
   models.Tags:
     properties:
       name:
+        type: string
+    type: object
+  models.User:
+    properties:
+      email:
+        type: string
+      games:
+        items:
+          $ref: '#/definitions/models.Game'
+        type: array
+      isVerified:
+        type: boolean
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.UserLogin:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  models.UserSignup:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
         type: string
     type: object
 host: localhost:8080
@@ -114,6 +147,28 @@ paths:
       summary: Update a game
       tags:
       - games
+  /login:
+    post:
+      consumes:
+      - application/json
+      operationId: login-account
+      parameters:
+      - description: Tag
+        in: body
+        name: platform
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      summary: Login into an account
+      tags:
+      - Authentication
   /platforms:
     get:
       operationId: get-all-platforms
@@ -169,6 +224,28 @@ paths:
       summary: Delete a platform
       tags:
       - platforms
+  /signup:
+    post:
+      consumes:
+      - application/json
+      operationId: create-account
+      parameters:
+      - description: Tag
+        in: body
+        name: platform
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserSignup'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      summary: Create an account
+      tags:
+      - Authentication
   /tags:
     get:
       operationId: get-all-tags

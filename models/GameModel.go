@@ -9,4 +9,5 @@ type Game struct {
 	Status      string      `json:"status"`
 	Platforms   []Platforms `gorm:"many2many:game_platforms;"`
 	Tags        []Tags      `gorm:"many2many:game_tags;"`
+	UserID      uint        `json:"user_id"`
 }

@@ -29,7 +29,7 @@ func ConnectDatabase() {
 		log.Fatal("Error connecting to database")
 	}
 
-	errMigrate := db.AutoMigrate(&models.Game{}, &models.Platforms{}, &models.Tags{}) // migrate models to database
+	errMigrate := db.AutoMigrate(&models.User{}, &models.Game{}, &models.Platforms{}, &models.Tags{}) // migrate models to database
 
 	if errMigrate != nil {
 		log.Fatal("Error migrating models")

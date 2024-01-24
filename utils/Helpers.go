@@ -11,6 +11,7 @@ func CheckParse(c *gin.Context, model interface{}) interface{} {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Error parsing JSON",
 		})
+		c.Abort()
 		return nil
 	}
 
