@@ -15,10 +15,36 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/platforms": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "platforms"
+                ],
+                "summary": "Get all platforms",
+                "operationId": "get-all-platforms",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Platforms"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/tags": {
             "get": {
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "tags"
                 ],
                 "summary": "Get all tags",
                 "operationId": "get-all-tags",
@@ -37,6 +63,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "tags"
                 ],
                 "summary": "Create a tag",
                 "operationId": "create-tag",
@@ -66,6 +95,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "tags"
+                ],
                 "summary": "Delete a tag",
                 "operationId": "delete-tag",
                 "parameters": [
@@ -89,6 +121,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.Platforms": {
+            "type": "object",
+            "properties": {
+                "iconName": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Tags": {
             "type": "object",
             "properties": {

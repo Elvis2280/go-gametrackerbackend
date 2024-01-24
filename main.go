@@ -37,6 +37,7 @@ func main() {
 	// Now add a UI handler
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	routes.SetupTagsRoutes(r)
+	routes.SetupPlatformsRoutes(r)
 
 	r.Run()
 }

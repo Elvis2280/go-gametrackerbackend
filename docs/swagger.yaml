@@ -1,5 +1,12 @@
 basePath: /api
 definitions:
+  models.Platforms:
+    properties:
+      iconName:
+        type: string
+      name:
+        type: string
+    type: object
   models.Tags:
     properties:
       name:
@@ -11,6 +18,21 @@ info:
   description: Game tracker app API
   title: Game tracker API
 paths:
+  /platforms:
+    get:
+      operationId: get-all-platforms
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Platforms'
+            type: array
+      summary: Get all platforms
+      tags:
+      - platforms
   /tags:
     get:
       operationId: get-all-tags
@@ -22,6 +44,8 @@ paths:
           schema:
             $ref: '#/definitions/models.Tags'
       summary: Get all tags
+      tags:
+      - tags
     post:
       consumes:
       - application/json
@@ -41,6 +65,8 @@ paths:
           schema:
             $ref: '#/definitions/models.Tags'
       summary: Create a tag
+      tags:
+      - tags
   /tags/{id}:
     delete:
       operationId: delete-tag
@@ -58,4 +84,6 @@ paths:
           schema:
             $ref: '#/definitions/models.Tags'
       summary: Delete a tag
+      tags:
+      - tags
 swagger: "2.0"

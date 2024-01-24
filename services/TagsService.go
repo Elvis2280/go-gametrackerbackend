@@ -10,6 +10,7 @@ import (
 )
 
 // GetTags godoc
+// @Tags tags
 // @Summary Get all tags
 // @ID get-all-tags
 // @Produce  json
@@ -37,6 +38,7 @@ func GetTags(c *gin.Context) {
 }
 
 // CreateTag godoc
+// @Tags tags
 // @Summary Create a tag
 // @ID create-tag
 // @Accept  json
@@ -69,6 +71,7 @@ func CreateTag(c *gin.Context) {
 }
 
 // DeleteTag godoc
+// @Tags tags
 // @Summary Delete a tag
 // @ID delete-tag
 // @Produce  json

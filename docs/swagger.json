@@ -8,10 +8,36 @@
     "host": "localhost:8080",
     "basePath": "/api",
     "paths": {
+        "/platforms": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "platforms"
+                ],
+                "summary": "Get all platforms",
+                "operationId": "get-all-platforms",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Platforms"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/tags": {
             "get": {
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "tags"
                 ],
                 "summary": "Get all tags",
                 "operationId": "get-all-tags",
@@ -30,6 +56,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "tags"
                 ],
                 "summary": "Create a tag",
                 "operationId": "create-tag",
@@ -59,6 +88,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "tags"
+                ],
                 "summary": "Delete a tag",
                 "operationId": "delete-tag",
                 "parameters": [
@@ -82,6 +114,17 @@
         }
     },
     "definitions": {
+        "models.Platforms": {
+            "type": "object",
+            "properties": {
+                "iconName": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Tags": {
             "type": "object",
             "properties": {
