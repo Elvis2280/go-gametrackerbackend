@@ -6,7 +6,8 @@ import (
 )
 
 func SetupTagsRoutes(r *gin.Engine) {
-	r.GET("/api/tags", services.GetTags)
-	r.POST("/api/tags", services.CreateTag)
-	r.DELETE("/api/tags/:id", services.DeleteTag)
+	tagsRoutes := r.Group("/api/tags")
+	tagsRoutes.GET("", services.GetTags)
+	tagsRoutes.POST("", services.CreateTag)
+	tagsRoutes.DELETE("/:id", services.DeleteTag)
 }

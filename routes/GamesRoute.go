@@ -6,7 +6,8 @@ import (
 )
 
 func SetupGamesRoutes(r *gin.Engine) {
-	r.GET("/api/games", services.GetGames)
-	r.POST("/api/games", services.CreateGame)
-	r.DELETE("/api/games/:id", services.DeleteGame)
+	gamesRoutes := r.Group("/api/games")
+	gamesRoutes.GET("", services.GetGames)
+	gamesRoutes.POST("", services.CreateGame)
+	gamesRoutes.DELETE("/:id", services.DeleteGame)
 }

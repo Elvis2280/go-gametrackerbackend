@@ -1,12 +1,15 @@
 package routes
 
 import (
+	"gametracker/middleware"
 	"gametracker/services"
 	"github.com/gin-gonic/gin"
 )
 
 func SetupPlatformsRoutes(r *gin.Engine) {
-	r.GET("/api/platforms", services.GetPlatforms)
-	r.POST("/api/platforms", services.CreatePlatform)
-	r.DELETE("/api/platforms/:id", services.DeletePlatform)
+	platformRoutes := r.Group("/api/platforms")
+	platformRoutes.Use(middleware.Auth())
+	platformRoutes.GET("", services.GetPlatforms)
+	platformRoutes.POST("", services.CreatePlatform)
+	platformRoutes.DELETE("/:id", services.DeletePlatform)
 }

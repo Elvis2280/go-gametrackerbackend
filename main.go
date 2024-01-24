@@ -17,6 +17,10 @@ import (
 // @TermsOfServiceUrl https://erudev.page
 // @host      localhost:8080
 // @BasePath  /api
+// @Security Bearer
+// @SecurityDefinitions.apikey Bearer
+// @in header
+// @name Authorization
 func main() {
 	db.ConnectDatabase()
 	r := gin.Default()

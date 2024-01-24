@@ -181,6 +181,8 @@ paths:
             items:
               $ref: '#/definitions/models.Platforms'
             type: array
+      security:
+      - Bearer: []
       summary: Get all platforms
       tags:
       - platforms
@@ -202,6 +204,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Platforms'
+      security:
+      - Bearer: []
       summary: Create a platform
       tags:
       - platforms
@@ -221,6 +225,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Platforms'
+      security:
+      - Bearer: []
       summary: Delete a platform
       tags:
       - platforms
@@ -299,4 +305,11 @@ paths:
       summary: Delete a tag
       tags:
       - tags
+security:
+- Bearer: []
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
