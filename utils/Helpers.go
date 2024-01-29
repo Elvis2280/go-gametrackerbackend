@@ -6,11 +6,9 @@ import (
 )
 
 func CheckParse(c *gin.Context, model interface{}) interface{} {
-	parsing := c.BindJSON(&model)
-	if parsing != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Error parsing JSON",
-		})
+
+	if err := c.ShouldBindJSON(&model); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		c.Abort()
 		return nil
 	}

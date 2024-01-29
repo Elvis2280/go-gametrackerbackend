@@ -6,6 +6,7 @@ import (
 	"gametracker/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strings"
 )
 
 // SignUp godoc
@@ -27,7 +28,7 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	checkIfUserExist := database.Where("email = ?", user.Email).First(&user)
+	checkIfUserExist := database.Where("email = ?", strings.ToLower(user.Email)).First(&user)
 	if checkIfUserExist.RowsAffected != 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "User already exists",
@@ -68,13 +69,14 @@ func SignUp(c *gin.Context) {
 // @Param platform body models.UserLogin true "Tag"
 func Login(c *gin.Context) {
 	var user models.User
+	database := db.GetDatabase()
 
 	parse := utils.CheckParse(c, &user) // check if the JSON is parsed correctly
 	if parse == nil {
 		return
 	}
 
-	_, err := utils.ComparePassword(user.Password, user.Email) // check if the password is valid
+	_, err := utils.ComparePassword(user.Password, strings.ToLower(user.Email)) // check if the password is valid
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Password or email is incorrect",
@@ -82,7 +84,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token, err := utils.GenerateToken(user.Email) // generate the JWT token
+	token, err := utils.GenerateToken(strings.ToLower(user.Email)) // generate the JWT token
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -91,7 +93,13 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	database.Where("email = ?", strings.ToLower(user.Email)).First(&user)
+
 	c.JSON(http.StatusOK, gin.H{
 		"token": token,
+		"userdata": gin.H{
+			"username": user.Username,
+			"email":    user.Email,
+		},
 	})
 }
