@@ -1,8 +1,39 @@
 basePath: /api
 definitions:
+  models.CreateGame:
+    properties:
+      description:
+        type: string
+      image:
+        type: string
+      name:
+        type: string
+      platforms:
+        items:
+          type: integer
+        type: array
+      status:
+        type: string
+      tags:
+        items:
+          type: integer
+        type: array
+      user_id:
+        type: integer
+    required:
+    - description
+    - image
+    - name
+    - platforms
+    - status
+    - tags
+    - user_id
+    type: object
   models.Game:
     properties:
       description:
+        type: string
+      image:
         type: string
       name:
         type: string
@@ -114,14 +145,14 @@ paths:
         name: platform
         required: true
         schema:
-          $ref: '#/definitions/models.Game'
+          $ref: '#/definitions/models.CreateGame'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Game'
+            $ref: '#/definitions/models.CreateGame'
       summary: Create a game
       tags:
       - games
@@ -181,8 +212,6 @@ paths:
             items:
               $ref: '#/definitions/models.Platforms'
             type: array
-      security:
-      - Bearer: []
       summary: Get all platforms
       tags:
       - platforms
@@ -204,8 +233,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Platforms'
-      security:
-      - Bearer: []
       summary: Create a platform
       tags:
       - platforms
@@ -225,8 +252,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Platforms'
-      security:
-      - Bearer: []
       summary: Delete a platform
       tags:
       - platforms

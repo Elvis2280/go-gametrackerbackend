@@ -28,6 +28,8 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
+	user.Email = strings.ToLower(user.Email) // convert email to lowercase
+
 	checkIfUserExist := database.Where("email = ?", strings.ToLower(user.Email)).First(&user)
 	if checkIfUserExist.RowsAffected != 0 {
 		c.JSON(http.StatusBadRequest, gin.H{

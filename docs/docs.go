@@ -56,7 +56,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Game"
+                            "$ref": "#/definitions/models.CreateGame"
                         }
                     }
                 ],
@@ -64,7 +64,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Game"
+                            "$ref": "#/definitions/models.CreateGame"
                         }
                     }
                 }
@@ -172,11 +172,6 @@ const docTemplate = `{
         },
         "/platforms": {
             "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -198,11 +193,6 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -237,11 +227,6 @@ const docTemplate = `{
         },
         "/platforms/{id}": {
             "delete": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -386,10 +371,54 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.CreateGame": {
+            "type": "object",
+            "required": [
+                "description",
+                "image",
+                "name",
+                "platforms",
+                "status",
+                "tags",
+                "user_id"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "platforms": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.Game": {
             "type": "object",
             "properties": {
                 "description": {
+                    "type": "string"
+                },
+                "image": {
                     "type": "string"
                 },
                 "name": {

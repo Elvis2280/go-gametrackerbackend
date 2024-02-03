@@ -38,9 +38,9 @@ func GetGames(c *gin.Context) {
 // @ID create-game
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} models.Game
+// @Success 200 {object} models.CreateGame
 // @Router /games [POST]
-// @Param platform body models.Game true "Tag"
+// @Param platform body models.CreateGame true "Tag"
 func CreateGame(c *gin.Context) {
 	database := db.GetDatabase()
 	var game models.Game
@@ -51,6 +51,7 @@ func CreateGame(c *gin.Context) {
 	}
 
 	checkGameExists := database.Where("name = ?", game.Name).First(&game) // check if game already exists
+
 	if checkGameExists.RowsAffected > 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Game already exists",
@@ -58,7 +59,22 @@ func CreateGame(c *gin.Context) {
 		return
 	}
 
-	requestDb := database.Create(&game)
+	var platformData models.Platforms
+	for _, platform := range game.Platforms { // add platforms to game
+		database.FirstOrCreate(&platformData, models.Platforms{Name: platform.Name, IconName: platform.IconName})
+		game.Platforms = append(game.Platforms, platformData)
+	}
+	game.Platforms = []models.Platforms{platformData}
+
+	var tagData models.Tags
+	for _, tag := range game.Tags { // add tags to game
+		database.FirstOrCreate(&tagData, models.Tags{Name: tag.Name})
+		game.Tags = append(game.Tags, tagData)
+	}
+	game.Tags = []models.Tags{tagData}
+
+	requestDb := database.Create(&game) // create game
+
 	if requestDb.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Error creating game",

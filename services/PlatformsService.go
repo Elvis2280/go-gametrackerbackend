@@ -14,7 +14,6 @@ import (
 // @Produce  json
 // @Success 200 {object} []models.Platforms
 // @Router /platforms [get]
-// @Security Bearer
 func GetPlatforms(c *gin.Context) {
 	database := db.GetDatabase()
 	var platforms []models.Platforms
@@ -41,7 +40,6 @@ func GetPlatforms(c *gin.Context) {
 // @Success 200 {object} models.Platforms
 // @Router /platforms [POST]
 // @Param platform body models.Platforms true "Tag"
-// @Security Bearer
 func CreatePlatform(c *gin.Context) {
 	database := db.GetDatabase()
 	var platform models.Platforms
@@ -81,7 +79,6 @@ func CreatePlatform(c *gin.Context) {
 // @Success 200 {object} models.Platforms
 // @Router /platforms/{id} [DELETE]
 // @Param id path string true "Platform ID"
-// @Security Bearer
 func DeletePlatform(c *gin.Context) {
 	database := db.GetDatabase()
 	var platform models.Platforms
