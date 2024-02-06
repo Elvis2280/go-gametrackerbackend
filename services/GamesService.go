@@ -50,7 +50,7 @@ func CreateGame(c *gin.Context) {
 		return
 	}
 
-	checkGameExists := database.Where("name = ?", game.Name).First(&game) // check if game already exists
+	checkGameExists := database.Where("Name = ?", game.Name).Find(&game) // check if game already exists
 
 	if checkGameExists.RowsAffected > 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -59,21 +59,26 @@ func CreateGame(c *gin.Context) {
 		return
 	}
 
-	var platformData models.Platforms
+	var platformData []models.Platforms
 	for _, platform := range game.Platforms { // add platforms to game
-		database.FirstOrCreate(&platformData, models.Platforms{Name: platform.Name, IconName: platform.IconName})
-		game.Platforms = append(game.Platforms, platformData)
+		var platformCreated models.Platforms
+		database.FirstOrCreate(&platformCreated, models.Platforms{Name: platform.Name, IconName: platform.IconName})
+		platformData = append(platformData, platformCreated)
 	}
-	game.Platforms = []models.Platforms{platformData}
+	game.Platforms = platformData // necessary to append platforms to game
 
-	var tagData models.Tags
-	for _, tag := range game.Tags { // add tags to game
-		database.FirstOrCreate(&tagData, models.Tags{Name: tag.Name})
-		game.Tags = append(game.Tags, tagData)
+	var tagData []models.Tags
+	for _, tag := range game.Tags { // check if tag exists assign it to tag data if not create it
+		var tagCreated models.Tags
+		database.FirstOrCreate(&tagCreated, models.Tags{Name: tag.Name})
+		tagData = append(tagData, tagCreated)
 	}
-	game.Tags = []models.Tags{tagData}
+	game.Tags = tagData // necessary to append tags to game
 
 	requestDb := database.Create(&game) // create game
+
+	database.Model(&game).Association("Platforms").Append(game.Platforms)
+	database.Model(&game).Association("Tags").Append(game.Tags)
 
 	if requestDb.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

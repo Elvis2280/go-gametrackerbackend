@@ -1,14 +1,11 @@
 package models
 
-import "gorm.io/gorm"
-
 type User struct {
-	gorm.Model `swaggerignore:"true"`
 	Username   string `gorm:"not null" json:"username"`
 	Password   string `gorm:"not null" json:"password"`
-	Email      string `gorm:"unique; not null" json:"email"`
+	Email      string `gorm:"unique; not null; primarykey" json:"email"`
 	IsVerified bool   `gorm:"default:false" json:"isVerified"`
-	Games      []Game `gorm:"foreignKey:UserID" json:"games"`
+	Games      []Game `gorm:"foreignKey:Email" json:"games"`
 }
 
 type UserLogin struct {

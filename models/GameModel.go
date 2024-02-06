@@ -10,7 +10,7 @@ type Game struct {
 	Image       string      `json:"image"`
 	Platforms   []Platforms `gorm:"many2many:game_platforms;"`
 	Tags        []Tags      `gorm:"many2many:game_tags;"`
-	UserID      uint        `json:"user_id"`
+	Email       string      `json:"email" gorm:"type:text"`
 }
 
 type CreateGame struct {
@@ -20,5 +20,5 @@ type CreateGame struct {
 	Status      string      `json:"status" binding:"required"`
 	Platforms   []Platforms `json:"platforms" binding:"required"`
 	Tags        []Tags      `json:"tags" binding:"required"`
-	UserID      uint        `json:"user_id" binding:"required"`
+	UserID      string      `json:"user_id" binding:"required"`
 }
