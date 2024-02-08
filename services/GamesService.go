@@ -19,7 +19,7 @@ func GetGames(c *gin.Context) {
 	database := db.GetDatabase() // get database connection
 	var games []models.Game      // create empty array of games
 
-	requestDb := database.Find(&games) // get all games from database
+	requestDb := database.Preload("Platforms").Preload("Tags").Find(&games) // get all games with platforms and tags with preload
 
 	if requestDb.Error != nil { // 500
 		c.JSON(http.StatusInternalServerError, gin.H{
