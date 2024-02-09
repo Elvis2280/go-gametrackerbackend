@@ -78,7 +78,9 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	_, err := utils.ComparePassword(user.Password, strings.ToLower(user.Email)) // check if the password is valid
+	user.Email = strings.ToLower(user.Email) // convert email to lowercase
+
+	_, err := utils.ComparePassword(user.Password, user.Email) // check if the password is valid
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Password or email is incorrect",
