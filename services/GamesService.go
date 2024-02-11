@@ -6,6 +6,7 @@ import (
 	"gametracker/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strings"
 )
 
 // GetGames godoc
@@ -16,10 +17,18 @@ import (
 // @Success 200 {object} []models.Game
 // @Router /games [get]
 func GetGames(c *gin.Context) {
-	database := db.GetDatabase() // get database connection
-	var games []models.Game      // create empty array of games
+	database := db.GetDatabase()                  // get database connection
+	var games []models.Game                       // create empty array of games
+	var email = strings.ToLower(c.Query("email")) // get email from query
 
-	requestDb := database.Preload("Platforms").Preload("Tags").Find(&games) // get all games with platforms and tags with preload
+	if email == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Email param is required",
+		})
+		return
+	}
+
+	requestDb := database.Preload("Platforms").Preload("Tags").Where("Email = ?", email).Find(&games) // get all games with platforms and tags with preload
 
 	if requestDb.Error != nil { // 500
 		c.JSON(http.StatusInternalServerError, gin.H{
