@@ -147,8 +147,9 @@ func DeleteGame(c *gin.Context) {
 func UpdateGame(c *gin.Context) {
 	database := db.GetDatabase()
 	var game models.Game
+	var gameId = c.Param("id")
 
-	checkIfGameExist := database.Where("id = ?", c.Param("id")).First(&game) // check if game exists
+	checkIfGameExist := database.Where("id = ?", gameId).First(&game) // check if game exists
 	if checkIfGameExist.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Game does not exist",
@@ -160,6 +161,22 @@ func UpdateGame(c *gin.Context) {
 	if parsing == nil {
 		return
 	}
+
+	var platformData []models.Platforms
+	for _, platform := range game.Platforms { // add platforms to game
+		var platformCreated models.Platforms
+		database.FirstOrCreate(&platformCreated, models.Platforms{Name: platform.Name, IconName: platform.IconName})
+		platformData = append(platformData, platformCreated)
+	}
+	game.Platforms = platformData // necessary to append platforms to game
+
+	var tagData []models.Tags
+	for _, tag := range game.Tags { // check if tag exists assign it to tag data if not create it
+		var tagCreated models.Tags
+		database.FirstOrCreate(&tagCreated, models.Tags{Name: tag.Name})
+		tagData = append(tagData, tagCreated)
+	}
+	game.Tags = tagData // necessary to append tags to game
 
 	requestDb := database.Save(&game)
 	if requestDb.Error != nil {

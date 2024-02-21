@@ -12,4 +12,5 @@ func SetupGamesRoutes(r *gin.Engine) {
 	gamesRoutes.GET("", services.GetGames)
 	gamesRoutes.POST("", services.CreateGame)
 	gamesRoutes.DELETE("/:id", services.DeleteGame)
+	gamesRoutes.PUT("/:id", services.UpdateGame)
 }
