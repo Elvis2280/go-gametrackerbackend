@@ -7,8 +7,14 @@ This is the backend for the Game Tracker app. It is a RESTFull API built with Go
 - `JWT_EXPIRES` - The time in hours (Int) for JWT tokens to expire
 - `JWT_ISSUER` - The issuer of the JWT tokens
 
+## Installation
+- Clone the repo
+- Add the .env file to the root of the project
+- Run docker-compose build
+- Run docker-compose up
+
 ## Commands
-- `go run main.go` - Runs the server
+- `docker-compose up` - Runs the server port 8080
 - `swag init` - Generates swagger documentation
 
 
