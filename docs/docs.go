@@ -395,7 +395,7 @@ const docTemplate = `{
                 "platforms": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.Platforms"
                     }
                 },
                 "status": {
@@ -404,11 +404,11 @@ const docTemplate = `{
                 "tags": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.Tags"
                     }
                 },
                 "user_id": {
-                    "type": "integer"
+                    "type": "string"
                 }
             }
         },
@@ -416,6 +416,9 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "description": {
+                    "type": "string"
+                },
+                "email": {
                     "type": "string"
                 },
                 "image": {
@@ -438,9 +441,6 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.Tags"
                     }
-                },
-                "user_id": {
-                    "type": "integer"
                 }
             }
         },

@@ -114,7 +114,16 @@ func DeleteGame(c *gin.Context) {
 	database := db.GetDatabase()
 	var game models.Game
 
+	var gameId = c.Param("id")
+	if gameId == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Game id is required",
+		})
+		return
+	}
+
 	checkIfGameExist := database.Where("id = ?", c.Param("id")).First(&game) // check if game exists
+
 	if checkIfGameExist.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Game does not exist",

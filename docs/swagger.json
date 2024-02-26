@@ -388,7 +388,7 @@
                 "platforms": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.Platforms"
                     }
                 },
                 "status": {
@@ -397,11 +397,11 @@
                 "tags": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.Tags"
                     }
                 },
                 "user_id": {
-                    "type": "integer"
+                    "type": "string"
                 }
             }
         },
@@ -409,6 +409,9 @@
             "type": "object",
             "properties": {
                 "description": {
+                    "type": "string"
+                },
+                "email": {
                     "type": "string"
                 },
                 "image": {
@@ -431,9 +434,6 @@
                     "items": {
                         "$ref": "#/definitions/models.Tags"
                     }
-                },
-                "user_id": {
-                    "type": "integer"
                 }
             }
         },

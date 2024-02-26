@@ -10,16 +10,16 @@ definitions:
         type: string
       platforms:
         items:
-          type: integer
+          $ref: '#/definitions/models.Platforms'
         type: array
       status:
         type: string
       tags:
         items:
-          type: integer
+          $ref: '#/definitions/models.Tags'
         type: array
       user_id:
-        type: integer
+        type: string
     required:
     - description
     - image
@@ -32,6 +32,8 @@ definitions:
   models.Game:
     properties:
       description:
+        type: string
+      email:
         type: string
       image:
         type: string
@@ -47,8 +49,6 @@ definitions:
         items:
           $ref: '#/definitions/models.Tags'
         type: array
-      user_id:
-        type: integer
     type: object
   models.Platforms:
     properties:
