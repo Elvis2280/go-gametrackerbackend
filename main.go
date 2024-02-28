@@ -40,6 +40,12 @@ func main() {
 	//routes.SetupUsersRoutes(r)
 	//err := r.Run()
 
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+
 	//if err != nil {
 	//	panic(err)
 	//}
