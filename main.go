@@ -1,6 +1,7 @@
 package main
 
 import (
+	"gametracker/db"
 	_ "gametracker/docs"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -20,7 +21,7 @@ import (
 // @in header
 // @name Authorization
 func main() {
-	//db.ConnectDatabase()
+	db.ConnectDatabase()
 	r := gin.Default()
 	r.Use(gin.Logger())
 
