@@ -3,6 +3,8 @@ package main
 import (
 	_ "gametracker/docs"
 	"github.com/gin-gonic/gin"
+	"github.com/wI2L/fizz"
+	"github.com/wI2L/fizz/openapi"
 )
 
 // @title Game tracker API
@@ -21,17 +23,17 @@ func main() {
 	r.Use(gin.Logger())
 
 	// Create a new Fizz instance from the Gin engine.
-	//f := fizz.NewFromEngine(r)
+	f := fizz.NewFromEngine(r)
 
 	// Add Open API description
-	//infos := &openapi.Info{
-	//	Title:       "Game tracker API",
-	//	Description: "This is my Service API",
-	//	Version:     "0.1",
-	//}
+	infos := &openapi.Info{
+		Title:       "Game tracker API",
+		Description: "This is my Service API",
+		Version:     "0.1",
+	}
 
 	// Create an endpoint for openapi.json file
-	//f.GET("/openapi.json", nil, f.OpenAPI(infos, "json"))
+	f.GET("/openapi.json", nil, f.OpenAPI(infos, "json"))
 	//// Now add a UI handler
 	//r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	//routes.SetupTagsRoutes(r)
