@@ -39,8 +39,8 @@ func main() {
 	f.GET("/openapi.json", nil, f.OpenAPI(infos, "json"))
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// app routes
-	routes.SetupTagsRoutes(r)
-	//routes.SetupPlatformsRoutes(r)
+	//routes.SetupTagsRoutes(r)
+	routes.SetupPlatformsRoutes(r)
 	//routes.SetupGamesRoutes(r)
 	//routes.SetupUsersRoutes(r)
 
