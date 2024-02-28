@@ -3,6 +3,8 @@ package main
 import (
 	_ "gametracker/docs"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/wI2L/fizz"
 	"github.com/wI2L/fizz/openapi"
 )
@@ -35,7 +37,7 @@ func main() {
 	// Create an endpoint for openapi.json file
 	f.GET("/openapi.json", nil, f.OpenAPI(infos, "json"))
 	//// Now add a UI handler
-	//r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	//routes.SetupTagsRoutes(r)
 	//routes.SetupPlatformsRoutes(r)
 	//routes.SetupGamesRoutes(r)
