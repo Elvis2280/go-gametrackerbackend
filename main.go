@@ -44,7 +44,7 @@ func main() {
 	//routes.SetupUsersRoutes(r)
 	//err := r.Run()
 
-	if err != nil {
-		panic(err)
-	}
+	//if err != nil {
+	//	panic(err)
+	//}
 }
