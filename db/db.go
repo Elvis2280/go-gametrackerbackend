@@ -14,16 +14,7 @@ var database *gorm.DB
 
 func init() {
 	println("Loading environment variables...")
-
 	databaseUrlConnection = os.Getenv("DATABASE_URL")
-	test1 := os.Getenv("JWT_SECRET")
-	test2 := os.Getenv("JWT_EXPIRES")
-	test3 := os.Getenv("JWT_ISSUER")
-	println("dburl", databaseUrlConnection)
-	println("test1", test1)
-	println("test2", test2)
-	println("test3", test3)
-
 }
 
 func ConnectDatabase() {

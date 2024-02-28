@@ -4,6 +4,7 @@ import (
 	"gametracker/db"
 	_ "gametracker/docs"
 	"gametracker/models"
+	"gametracker/routes"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -42,7 +43,7 @@ func main() {
 	//routes.SetupTagsRoutes(r)
 	//routes.SetupPlatformsRoutes(r)
 	//routes.SetupGamesRoutes(r)
-	//routes.SetupUsersRoutes(r)
+	routes.SetupUsersRoutes(r)
 
 	r.GET("test", func(c *gin.Context) {
 		database := db.GetDatabase()
