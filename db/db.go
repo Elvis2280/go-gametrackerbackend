@@ -17,7 +17,7 @@ func init() {
 	println("Loading environment variables...")
 
 	databaseUrlConnection = os.Getenv("DATABASE_URL")
-	print("dburl", databaseUrlConnection)
+	println("dburl", databaseUrlConnection)
 	err := godotenv.Load()
 	if databaseUrlConnection == "" && err != nil {
 		log.Fatal("No .env file found")
