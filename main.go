@@ -2,7 +2,6 @@ package main
 
 import (
 	_ "gametracker/docs"
-	"gametracker/routes"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -38,10 +37,10 @@ func main() {
 	f.GET("/openapi.json", nil, f.OpenAPI(infos, "json"))
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// app routes
-	routes.SetupTagsRoutes(r)
-	routes.SetupPlatformsRoutes(r)
-	routes.SetupGamesRoutes(r)
-	routes.SetupUsersRoutes(r)
+	//routes.SetupTagsRoutes(r)
+	//routes.SetupPlatformsRoutes(r)
+	//routes.SetupGamesRoutes(r)
+	//routes.SetupUsersRoutes(r)
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
