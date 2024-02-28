@@ -24,7 +24,7 @@ var Wrapper JwtWrapper
 
 func init() {
 	if err := godotenv.Load(); err != nil {
-		log.Fatal("No .env file found")
+		println("No .env file found")
 	}
 
 	expireTime, errParsing := strconv.ParseInt(os.Getenv("JWT_EXPIRES"), 10, 64)
