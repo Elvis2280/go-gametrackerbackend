@@ -80,25 +80,29 @@ func CreatePlatform(c *gin.Context) {
 // @Router /platforms/{id} [DELETE]
 // @Param id path string true "Platform ID"
 func DeletePlatform(c *gin.Context) {
-	database := db.GetDatabase()
-	var platform models.Platforms
-	checkIfPlatformExists := database.Where("id = ?", c.Param("id")).First(&platform)
-	if checkIfPlatformExists.RowsAffected == 0 {
-		c.JSON(400, gin.H{
-			"error": "Platform does not exist",
-		})
-		return
-	}
-
-	requestDb := database.Delete(&platform)
-	if requestDb.Error != nil {
-		c.JSON(500, gin.H{
-			"error": "Error deleting platform",
-		})
-		return
-	}
+	//database := db.GetDatabase()
+	//var platform models.Platforms
+	//checkIfPlatformExists := database.Where("id = ?", c.Param("id")).First(&platform)
+	//if checkIfPlatformExists.RowsAffected == 0 {
+	//	c.JSON(400, gin.H{
+	//		"error": "Platform does not exist",
+	//	})
+	//	return
+	//}
+	//
+	//requestDb := database.Delete(&platform)
+	//if requestDb.Error != nil {
+	//	c.JSON(500, gin.H{
+	//		"error": "Error deleting platform",
+	//	})
+	//	return
+	//}
+	//
+	//c.JSON(200, gin.H{
+	//	"platform": platform,
+	//})
 
 	c.JSON(200, gin.H{
-		"platform": platform,
+		"platform": "platform",
 	})
 }
