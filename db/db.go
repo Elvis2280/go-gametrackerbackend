@@ -2,7 +2,6 @@ package db
 
 import (
 	"gametracker/models"
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
@@ -17,11 +16,14 @@ func init() {
 	println("Loading environment variables...")
 
 	databaseUrlConnection = os.Getenv("DATABASE_URL")
+	test1 := os.Getenv("JWT_SECRET")
+	test2 := os.Getenv("JWT_EXPIRES")
+	test3 := os.Getenv("JWT_ISSUER")
 	println("dburl", databaseUrlConnection)
-	err := godotenv.Load()
-	if databaseUrlConnection == "" && err != nil {
-		log.Fatal("No .env file found")
-	}
+	println("test1", test1)
+	println("test2", test2)
+	println("test3", test3)
+
 }
 
 func ConnectDatabase() {
