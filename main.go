@@ -3,7 +3,6 @@ package main
 import (
 	_ "gametracker/docs"
 	"github.com/gin-gonic/gin"
-	"github.com/wI2L/fizz"
 )
 
 // @title Game tracker API
@@ -22,7 +21,7 @@ func main() {
 	r.Use(gin.Logger())
 
 	// Create a new Fizz instance from the Gin engine.
-	f := fizz.NewFromEngine(r)
+	//f := fizz.NewFromEngine(r)
 
 	// Add Open API description
 	//infos := &openapi.Info{
