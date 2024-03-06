@@ -88,6 +88,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	database.Where("email = ?", strings.ToLower(user.Email)).First(&user)                          // get the user from the database
 	token, err := utils.GenerateToken(strings.ToLower(user.Email), strings.ToLower(user.Username)) // generate the JWT token
 
 	if err != nil {
