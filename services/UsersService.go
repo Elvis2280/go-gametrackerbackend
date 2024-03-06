@@ -88,7 +88,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token, err := utils.GenerateToken(strings.ToLower(user.Email)) // generate the JWT token
+	token, err := utils.GenerateToken(strings.ToLower(user.Email), strings.ToLower(user.Username)) // generate the JWT token
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

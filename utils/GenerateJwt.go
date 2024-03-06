@@ -18,6 +18,7 @@ type JwtWrapper struct {
 type JwtClaim struct {
 	Email string
 	jwt.StandardClaims
+	Username string
 }
 
 var Wrapper JwtWrapper
@@ -39,9 +40,10 @@ func init() {
 	}
 }
 
-func GenerateToken(email string) (signedToken string, err error) {
+func GenerateToken(email string, username string) (signedToken string, err error) {
 	claims := JwtClaim{
-		Email: email,
+		Email:    email,
+		Username: username,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(Wrapper.ExpirationHours)).Unix(),
 			Issuer:    Wrapper.Issuer,
