@@ -38,6 +38,18 @@ func main() {
 	// open api routes
 	f.GET("/openapi.json", nil, f.OpenAPI(infos, "json"))
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	// Cors
+	r.Use(func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+		c.Next()
+	})
 	// app routes
 	routes.SetupTagsRoutes(r)
 	routes.SetupPlatformsRoutes(r)
