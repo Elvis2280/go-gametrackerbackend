@@ -14,8 +14,13 @@ This is the backend for the Game Tracker app. It is a RESTFull API built with Go
 - Run docker-compose up
 
 ## Commands
-- `docker-compose up` - Runs the server port 8080
+- `docker-compose -f docker-compose.debug.yml up --build` - Runs the server port 8080 in development mode
 - `swag init` - Generates swagger documentation
+
+## Enable debug mode
+This is setup to run in debug mode using docker compose
+so you need to setup your IDE to run external debug in port 2345 localhost
+so after running the docker-compose up --build you can run the debug mode in your IDE
 
 
 

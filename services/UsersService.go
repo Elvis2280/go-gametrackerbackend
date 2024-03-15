@@ -99,7 +99,6 @@ func Login(c *gin.Context) {
 	}
 
 	database.Where("email = ?", strings.ToLower(user.Email)).First(&user)
-
 	c.JSON(http.StatusOK, gin.H{
 		"token": token,
 		"userdata": gin.H{
