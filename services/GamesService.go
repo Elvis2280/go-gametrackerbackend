@@ -166,6 +166,10 @@ func UpdateGame(c *gin.Context) {
 		return
 	}
 
+	database.Model(&game).Association("Platforms").Clear()
+	database.Model(&game).Association("Tags").Clear()
+	// Delete the associations to avoid duplicates or keep the same associations
+
 	parsing := utils.CheckParse(c, &game)
 	if parsing == nil {
 		return
