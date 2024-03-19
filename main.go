@@ -9,6 +9,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/wI2L/fizz"
 	"github.com/wI2L/fizz/openapi"
+	"os"
 )
 
 // @title Game tracker API
@@ -35,12 +36,20 @@ func main() {
 		Version:     "0.1",
 	}
 
+	isDev := os.Getenv("IS_DEV")
+	var corsAllowed string
+	if isDev == "true" {
+		corsAllowed = "http://localhost:3000"
+	} else {
+		corsAllowed = "https://gametracker-elvisdev.netlify.app"
+	}
+
 	// open api routes
 	f.GET("/openapi.json", nil, f.OpenAPI(infos, "json"))
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// Cors
 	r.Use(func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+		c.Writer.Header().Set("Access-Control-Allow-Origin", corsAllowed)
 		//c.Writer.Header().Set("Access-Control-Allow-Origin", "https://gametracker-elvisdev.netlify.app")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
