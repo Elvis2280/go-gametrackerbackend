@@ -39,7 +39,7 @@ func main() {
 	isDev := os.Getenv("IS_DEV")
 	var corsAllowed string
 	if isDev == "true" {
-		corsAllowed = "http://localhost:3000"
+		corsAllowed = "http://localhost:5173"
 	} else {
 		corsAllowed = "https://gametracker-elvisdev.netlify.app"
 	}

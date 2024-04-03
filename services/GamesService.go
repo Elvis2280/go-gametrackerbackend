@@ -6,6 +6,7 @@ import (
 	"gametracker/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -17,9 +18,41 @@ import (
 // @Success 200 {object} []models.Game
 // @Router /games [get]
 func GetGames(c *gin.Context) {
-	database := db.GetDatabase()                  // get database connection
-	var games []models.Game                       // create empty array of games
-	var email = strings.ToLower(c.Query("email")) // get email from query
+	database := db.GetDatabase() // get database connection
+	var games []models.Game
+
+	// create empty array of games
+	email := strings.ToLower(c.Query("email")) // get email from query
+
+	// get query params for pagination
+	sortKey := c.Query("sortKey")
+	status := c.Query("status")
+	//tags := c.Query("tags")
+
+	isAscendingStr := c.Query("isAscending")
+	isAscending, err := strconv.ParseBool(isAscendingStr)
+	if err != nil {
+		isAscending = false
+	}
+	itemPerPageStr := c.Query("itemPerPage")
+	itemsPerPage, err := strconv.Atoi(itemPerPageStr)
+	if err != nil || itemsPerPage < 1 {
+		itemsPerPage = 1
+	}
+	pageStr := c.Query("page")
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page < 1 {
+		page = 1
+	}
+
+	pag := &utils.Pagination{
+		ItemsPerPage: itemsPerPage,
+		CurrentPage:  page,
+		SortKey:      sortKey,
+		IsAscending:  isAscending,
+		Status:       status,
+		//Tags:         strings.Split(tags, ","),
+	}
 
 	if email == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -27,8 +60,13 @@ func GetGames(c *gin.Context) {
 		})
 		return
 	}
+	var totalItemsInt int64
 
-	requestDb := database.Preload("Platforms").Preload("Tags").Where("Email = ?", email).Find(&games) // get all games with platforms and tags with preload
+	database.Model(&models.Game{}).Where("Email = ?", email).Count(&totalItemsInt) // get total items for pagination
+
+	database, paginatedData := utils.HandlePagination(database, pag, totalItemsInt)
+
+	requestDb := database.Preload("Platforms").Preload("Tags").Where("Email = ?", email).Find(&games) // get all ga // mes with platforms and tags with preload
 
 	if requestDb.Error != nil { // 500
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -37,7 +75,8 @@ func GetGames(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{ // 200
-		"games": games,
+		"games":      games,
+		"pagination": paginatedData,
 	})
 }
 
