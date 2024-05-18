@@ -11,36 +11,33 @@ services:
       - data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    networks:
-        - backend
 
-  backend:
-    container_name: backend
-    depends_on:
-      - database
-    build:
-      dockerfile: Dockerfile.debug
-      context: .
-    env_file:
-      - .env
-    environment:
-      - DATABASE_URL=postgresql://user:password@database:5432/gametracker
-      - GOPATH=/go
-    volumes:
-      - ~/go/pkg:/go/pkg
-      - .:/dockerdev
-    ports:
-      - "8080:8080"
-      - "2345:2345"
-    links:
-      - database
-    networks:
-      - backend
-
-
-networks:
-  backend:
-    driver:
-        bridge
+#  backend:
+#    container_name: backend
+#    depends_on:
+#      - database
+#    build:
+#      dockerfile: Dockerfile.debug
+#      context: .
+#    env_file:
+#      - .env
+#    environment:
+#      - DATABASE_URL=postgresql://user:password@database:5432/gametracker
+#      - GOPATH=/go
+#    volumes:
+#      - ~/go/pkg:/go/pkg
+#      - .:/dockerdev
+#    ports:
+#      - "8080:8080"
+#    links:
+#      - database
+#    networks:
+#      - backend
+#
+#
+#networks:
+#  backend:
+#    driver:
+#        bridge
 volumes:
   data:

@@ -12,16 +12,6 @@ import (
 	"os"
 )
 
-// @title Game tracker API
-// @description Game tracker app API
-// @BasePath /api
-// @TermsOfServiceUrl https://erudev.page
-// @host      localhost:8080
-// @BasePath  /api
-// @Security Bearer
-// @SecurityDefinitions.apikey Bearer
-// @in header
-// @name Authorization
 func main() {
 	db.ConnectDatabase()
 	r := gin.Default()
@@ -50,7 +40,6 @@ func main() {
 	// Cors
 	r.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", corsAllowed)
-		//c.Writer.Header().Set("Access-Control-Allow-Origin", "https://gametracker-elvisdev.netlify.app")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")

@@ -5,7 +5,6 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
-	"os"
 	"time"
 )
 
@@ -14,7 +13,7 @@ var database *gorm.DB
 
 func init() {
 	println("Loading environment variables...")
-	databaseUrlConnection = os.Getenv("DATABASE_URL")
+	databaseUrlConnection = "postgresql://user:password@localhost:5432/gametracker"
 }
 
 func ConnectDatabase() {

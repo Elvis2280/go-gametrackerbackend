@@ -1,10 +1,12 @@
 package services
 
 import (
+	"gametracker/constants"
 	"gametracker/db"
 	"gametracker/models"
 	"gametracker/utils"
 	"github.com/gin-gonic/gin"
+	"math"
 	"net/http"
 	"strconv"
 	"strings"
@@ -18,65 +20,79 @@ import (
 // @Success 200 {object} []models.Game
 // @Router /games [get]
 func GetGames(c *gin.Context) {
-	database := db.GetDatabase() // get database connection
-	var games []models.Game
+	db := db.GetDatabase()
+	games := []models.Game{}
+	email := c.Query("email")
+	limit := c.Query("limit")
+	isActiveGames := c.Query("isActiveGames")
+	page := c.Query("page")
 
-	// create empty array of games
-	email := strings.ToLower(c.Query("email")) // get email from query
+	if limit == "" {
+		limit = "10"
+	}
+	if isActiveGames == "" {
+		isActiveGames = "true"
+	}
+	if page == "" {
+		page = "1"
+	}
 
-	// get query params for pagination
-	sortKey := c.Query("sortKey")
-	status := c.Query("status")
-	//tags := c.Query("tags")
-
-	isAscendingStr := c.Query("isAscending")
-	isAscending, err := strconv.ParseBool(isAscendingStr)
+	isActiveGamesParsed, err := strconv.ParseBool(isActiveGames)
 	if err != nil {
-		isAscending = false
-	}
-	itemPerPageStr := c.Query("itemPerPage")
-	itemsPerPage, err := strconv.Atoi(itemPerPageStr)
-	if err != nil || itemsPerPage < 1 {
-		itemsPerPage = 1
-	}
-	pageStr := c.Query("page")
-	page, err := strconv.Atoi(pageStr)
-	if err != nil || page < 1 {
-		page = 1
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid isActiveGames"})
+		return
+
 	}
 
-	pag := &utils.Pagination{
-		ItemsPerPage: itemsPerPage,
-		CurrentPage:  page,
-		SortKey:      sortKey,
-		IsAscending:  isAscending,
-		Status:       status,
-		//Tags:         strings.Split(tags, ","),
-	}
+	var totalItems int64
 
-	if email == "" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Email param is required",
-		})
+	limitParsed, err := strconv.ParseInt(limit, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid limit"})
 		return
 	}
-	var totalItemsInt int64
 
-	database.Model(&models.Game{}).Where("Email = ?", email).Count(&totalItemsInt) // get total items for pagination
-
-	database, paginatedData := utils.HandlePagination(database, pag, totalItemsInt)
-
-	requestDb := database.Preload("Platforms").Preload("Tags").Where("Email = ?", email).Find(&games) // get all ga // mes with platforms and tags with preload
-
-	if requestDb.Error != nil { // 500
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Error getting games",
-		})
+	pageParsed, err := strconv.ParseInt(page, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid page"})
+		return
+	}
+	if pageParsed < 1 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid page"})
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{ // 200
-		"games":      games,
-		"pagination": paginatedData,
+	if isActiveGamesParsed {
+		db.Model(&models.Game{}).Where("email = ?", email).Not("status = ?", constants.Completed).Count(&totalItems)
+	} else {
+		db.Model(&models.Game{}).Where("email = ?", email).Where("status = ?", constants.Completed).Count(&totalItems)
+	}
+
+	var nextPage int
+	roundedTotalItems := math.Ceil(float64(totalItems) / float64(limitParsed))
+	if float64(pageParsed) > roundedTotalItems {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid page"})
+		return
+	} else {
+		nextPage = int(pageParsed + 1)
+	}
+
+	offset := (pageParsed - 1) * limitParsed
+
+	if isActiveGamesParsed {
+		db.Where("email = ?", email).Not("status = ?", constants.Completed).Offset(int(offset)).Limit(int(limitParsed)).Preload("Platforms").Preload("Tags").Find(&games)
+	} else {
+		db.Where("email = ?", email).Where("status = ?", constants.Completed).Offset(int(offset)).Limit(int(limitParsed)).Preload("Platforms").Preload("Tags").Find(&games)
+	}
+
+	pagination := map[string]int{
+		"totalPages":  int(totalItems / limitParsed),
+		"currentPage": int(pageParsed),
+		"nextPage":    nextPage,
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data":       games,
+		"pagination": pagination,
 	})
 }
 
@@ -241,5 +257,52 @@ func UpdateGame(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"game": game,
 	})
+}
 
+func GetCountGames(c *gin.Context) {
+	database := db.GetDatabase()
+	email := strings.ToLower(c.Query("email")) // get email from query
+	var activeCount int64
+	var completedCount int64
+
+	database.Model(&models.Game{}).Where("email = ? AND status = ?", email, constants.Completed).Count(&completedCount)
+	database.Model(&models.Game{}).Where("email = ?", email).Not("status = ?", constants.Completed).Count(&activeCount)
+
+	counts := map[string]int{
+		"active":    int(activeCount),
+		"completed": int(completedCount),
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"counts": counts,
+	})
+}
+
+func calculatePagination(isFirstPage bool, hasPagination bool, limit int, games []models.Game, pointsNext bool) utils.PaginationInfo {
+	pagination := utils.PaginationInfo{}
+	nextCur := utils.Cursor{}
+	prevCur := utils.Cursor{}
+	if isFirstPage {
+		if hasPagination {
+			nextCur := utils.CreateCursor(strconv.Itoa(int(games[limit-1].ID)), games[limit-1].CreatedAt, true)
+			pagination = utils.GeneratePager(nextCur, nil)
+		}
+	} else {
+		if pointsNext {
+			// if pointing next, it always has prev but it might not have next
+			if hasPagination {
+				nextCur = utils.CreateCursor(strconv.Itoa(int(games[limit-1].ID)), games[limit-1].CreatedAt, true)
+			}
+			prevCur = utils.CreateCursor(strconv.Itoa(int(games[0].ID)), games[0].CreatedAt, false)
+			pagination = utils.GeneratePager(nextCur, prevCur)
+		} else {
+			// this is case of prev, there will always be nest, but prev needs to be calculated
+			nextCur = utils.CreateCursor(strconv.Itoa(int(games[limit-1].ID)), games[limit-1].CreatedAt, true)
+			if hasPagination {
+				prevCur = utils.CreateCursor(strconv.Itoa(int(games[0].ID)), games[0].CreatedAt, false)
+			}
+			pagination = utils.GeneratePager(nextCur, prevCur)
+		}
+	}
+	return pagination
 }
