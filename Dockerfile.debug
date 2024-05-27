@@ -6,13 +6,12 @@ COPY go.mod go.sum ./
 
 RUN go mod download
 
-COPY . .
-
-# Build Delve
 RUN go install github.com/go-delve/delve/cmd/dlv@latest
 
-RUN go build -o /go/bin/app
+COPY . .
 
-expose 8080
+RUN go build -gcflags="all=-N -l" -o /go/bin/app
 
-CMD ["dlv", "debug", "--headless=true", "--listen=:2345", "--api-version=2", "--log"]
+EXPOSE 8080 40000
+
+CMD ["dlv", "debug", "--headless", "--listen=:40000", "--api-version=2", "--accept-multiclient", "--log"]

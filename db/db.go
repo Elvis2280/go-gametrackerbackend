@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"gametracker/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -19,7 +18,6 @@ func init() {
 	if databaseUrl == "" {
 		databaseUrl = "postgres://user:password@localhost:5432/gametracker"
 	}
-	fmt.Println("DATABASE_URL: ", databaseUrl)
 	databaseUrlConnection = databaseUrl
 }
 
