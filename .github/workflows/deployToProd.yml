@@ -21,6 +21,9 @@ jobs:
           - name: Build Docker image
             run: docker build -t backend .
 
+          - name: Debug SSH Private Key
+            run: echo "${{ secrets.DOKKU_SSH_PRIVATE_KEY }}"
+
           - name: Push Dokku image
             uses: idoberko2/dokku-deploy-github-action@v1
             with:
