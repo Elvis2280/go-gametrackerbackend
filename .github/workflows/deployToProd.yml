@@ -1,0 +1,34 @@
+name: Check and Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v2
+
+          - name: Set up Go
+            uses: actions/setup-go@v2
+
+          - name: Check code with Go lint
+            uses: github.com/golangci/golangci-lint-action@v2
+            with:
+              version: v1.39.0
+
+          - name: Build
+            run: go build -o ./bin/backend ./main.go
+
+          - name: Build Docker image
+            run: docker build -t backend .
+
+          - name: Push Dokku image
+            uses: idoberko2/dokku-deploy-github-action@v1
+            with:
+              ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+              dokku-host: server.erudev.page
+              app-name: gametracker-backend
