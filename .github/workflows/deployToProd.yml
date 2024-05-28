@@ -11,6 +11,8 @@ jobs:
         steps:
           - name: Checkout code
             uses: actions/checkout@v2
+            with:
+              fetch-depth: 0
 
           - name: Set up Go
             uses: actions/setup-go@v2
@@ -30,3 +32,4 @@ jobs:
               ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
               dokku-host: server.erudev.page
               app-name: gametracker-backend
+              remote-branch: main
