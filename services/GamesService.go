@@ -26,6 +26,7 @@ func GetGames(c *gin.Context) {
 	limit := c.Query("limit")
 	isActiveGames := c.Query("isActiveGames")
 	page := c.Query("page")
+	searchGame := c.Query("search")
 
 	if limit == "" {
 		limit = "10"
@@ -62,6 +63,11 @@ func GetGames(c *gin.Context) {
 		return
 	}
 
+	// Sort to the database
+	if searchGame != "" {
+		db = db.Where("LOWER(name) LIKE LOWER(?)", "%"+searchGame+"%")
+	}
+
 	if isActiveGamesParsed {
 		db.Model(&models.Game{}).Where("email = ?", email).Not("status = ?", constants.Completed).Count(&totalItems)
 	} else {
@@ -71,8 +77,12 @@ func GetGames(c *gin.Context) {
 	var nextPage int
 	roundedTotalItems := math.Ceil(float64(totalItems) / float64(limitParsed))
 	if float64(pageParsed) > roundedTotalItems {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid page"})
-		return
+		if roundedTotalItems == 0 {
+			nextPage = 1
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid page"})
+			return
+		}
 	} else {
 		nextPage = int(pageParsed + 1)
 	}
@@ -84,6 +94,8 @@ func GetGames(c *gin.Context) {
 	} else {
 		db.Where("email = ?", email).Where("status = ?", constants.Completed).Offset(int(offset)).Limit(int(limitParsed)).Preload("Platforms").Preload("Tags").Find(&games)
 	}
+
+	//db.Offset(int(offset)).Limit(int(limitParsed)).Preload("Platforms").Preload("Tags").Find(&games)
 
 	pagination := map[string]int{
 		"totalPages":  int(totalItems / limitParsed),
