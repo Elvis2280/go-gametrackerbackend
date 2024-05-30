@@ -1,7 +1,7 @@
 name: Check and Deploy to Production
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
@@ -22,9 +22,6 @@ jobs:
 
           - name: Build Docker image
             run: docker build -t backend .
-
-          - name: Debug SSH Private Key
-            run: echo "${{ secrets.SSH_PRIVATE_KEY }}"
 
           - name: Push Dokku image
             uses: idoberko2/dokku-deploy-github-action@v1
