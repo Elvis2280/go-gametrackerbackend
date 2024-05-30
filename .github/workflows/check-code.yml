@@ -22,11 +22,3 @@ jobs:
 
           - name: Build Docker image
             run: docker build -t backend .
-
-          - name: Push Dokku image
-            uses: idoberko2/dokku-deploy-github-action@v1
-            with:
-              ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-              dokku-host: server.erudev.page
-              app-name: gametracker-backend
-              remote-branch: main
